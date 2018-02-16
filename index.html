@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Card game</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script
+	  src="https://code.jquery.com/jquery-3.3.1.min.js"
+	  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	  crossorigin="anonymous"></script>
+</head>
+<body>
+	<h1>Tres en raya</h1>
+	<p class="texto">Resultado</p>
+	<div id="cards-container">
+	<img id="carta1" class="card" src="cards/reverse.png">
+	<img id="carta2" class="card" src="cards/reverse.png">
+	<img id="carta3" class="card" src="cards/reverse.png">
+	<br>
+	<img id="carta4" class="card" src="cards/reverse.png">
+	<img id="carta5" class="card" src="cards/reverse.png">
+	<img id="carta6" class="card" src="cards/reverse.png">
+	<br>
+	<img id="carta7" class="card" src="cards/reverse.png">
+	<img id="carta8" class="card" src="cards/reverse.png">
+	<img id="carta9" class="card" src="cards/reverse.png">
+	</div>
+
+	<script type="text/javascript">
+		var click;
+		var nClicks = [0,0,0,0,0,0,0,0,0,0]; //el ultimo elemento de nClicks cuenta el numero de veces que se ha reseteado (empatado) hasta que uno gane 
+		var partida = [0,0,0,0,0,0,0,0,0];
+		var listaImagenes=["card1","card2"];
+        var filas = [0,3,6];
+        var total = 0;
+        var par;
+		
+		$("#carta1").click(function(){
+			click=1;
+			nClicks[0]=1;
+			volverCarta();
+			comprobarRaya();
+		})
+		$("#carta2").click(function(){
+			click=2;
+			nClicks[1]=1;
+			volverCarta();
+			comprobarRaya();
+		})
+		$("#carta3").click(function(){
+			click=3;
+			nClicks[2]=1;
+			volverCarta();
+			comprobarRaya();
+		})
+		$("#carta4").click(function(){
+			click=4;
+			nClicks[3]=1;
+			volverCarta();
+			comprobarRaya();
+		})
+		$("#carta5").click(function(){
+			click=5;
+			nClicks[4]=1;
+			volverCarta();
+			comprobarRaya();
+		})
+		$("#carta6").click(function(){
+			click=6;
+			nClicks[5]=1;
+			volverCarta();
+			comprobarRaya();
+		})
+		$("#carta7").click(function(){
+			click=7;
+			nClicks[6]=1;
+			volverCarta();
+			comprobarRaya();
+		})
+		$("#carta8").click(function(){
+			click=8;
+			nClicks[7]=1;
+			volverCarta();
+			comprobarRaya();
+		})
+		$("#carta9").click(function(){
+			click=9;
+			nClicks[8]=1;
+			volverCarta();
+			comprobarRaya();
+		})
+		
+		
+
+		function getSum(total, num) {
+    		return total + num;
+		}
+		
+
+		function volverCarta() {
+			par=nClicks.reduce(getSum);
+			for(var i=0;i<listaImagenes.length; i++){
+				
+				
+					if(par%2!=0){
+						$("#carta"+click).attr("src",'cards/'+listaImagenes[0]+'.png');
+
+						partida[click-1]="jugador 1";
+					}
+					if(par%2==0){
+						$("#carta"+click).attr("src",'cards/'+listaImagenes[1]+'.png');
+						partida[click-1]="jugador 2";
+					}
+
+					
+					
+				
+				
+			}
+
+		}
+
+		
+
+		function resetear(){
+			partida = [0,0,0,0,0,0,0,0,0];
+			total=0;
+			console.log(total);
+			for(var i=0;i<partida.length;i++){
+				$("#carta"+(i+1)).attr("src",'cards/reverse.png');
+			}
+
+		}
+
+		function comprobarRaya(){
+			//columnas
+			for(var i=0;i<3;i++){
+				if(partida[i]!=0 && partida[i]==partida[i+3] && partida[i]==partida[i+6]){
+					mostrarTexto("gana "+partida[i]);
+					nClicks = [0,0,0,0,0,0,0,0,0,0];
+					resetear();
+				}
+			}
+
+			//filas
+			
+			for(var i=0;i<filas.length;i++){
+				if(partida[filas[i]]!=0 && partida[filas[i]]==partida[filas[i]+1] && partida[filas[i]]==partida[filas[i]+2]){
+					mostrarTexto("gana "+partida[filas[i]]);
+					nClicks = [0,0,0,0,0,0,0,0,0,0];
+					resetear();
+				}
+			}
+
+			//diagonales
+			if(partida[0]!=0 && partida[0]==partida[4] && partida[0]==partida[8]){
+					mostrarTexto("gana "+partida[0]);
+					nClicks = [0,0,0,0,0,0,0,0,0,0];
+					resetear();
+				}
+
+			if(partida[2]!=0 && partida[2]==partida[4] && partida[2]==partida[6]){
+					mostrarTexto("gana "+partida[2]);
+					nClicks = [0,0,0,0,0,0,0,0,0,0];
+					resetear();
+				}
+
+
+
+			for(var i=0;i<partida.length;i++){
+				if(partida[i]!=0){
+					total=total+1;
+				}
+			}
+
+			
+			
+			if(total==9){
+				nClicks = [0,0,0,0,0,0,0,0,0,0];
+				nClicks[9]=nClicks[9]+1;
+				mostrarTexto("Empate numero: "+nClicks[9]);
+				resetear();
+			}
+
+			total=0;
+
+		}
+
+		function mostrarTexto(mensaje) {
+			$(".texto").text(mensaje);
+			$(".texto").show();
+		}
+	</script>
+</body>
+</html>
